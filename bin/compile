@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+echo "-----> Installing AWS CloudWatch Agent"
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+AGENT_URL="https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb"
+DEB_FILENAME="amazon-cloudwatch-agent.deb"
+CACHE_FILE="$CACHE_DIR/$DEB_FILENAME"
+
+if [ ! -f $CACHE_FILE ]; then
+    echo "Downloading agent" | indent
+    wget $AGENT_URL | indent
+    
+    echo "Storing deb in cache" | indent
+    if [ ! -d $CACHE_DIR ]; then
+        mkdir -p $CACHE_DIR
+    fi
+    mv ./$DEB_FILENAME $CACHE_DIR 
+fi
+
+cd $CACHE_DIR
+sudo dpkg -i -E ./$DEB_FILENAME
+

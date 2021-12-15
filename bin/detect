@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "AWS CloudWatch Agent"
+exit 0
