@@ -26,5 +26,5 @@ if [ ! -f $CACHE_FILE ]; then
 fi
 
 cd $CACHE_DIR
-sudo dpkg -i -E ./$DEB_FILENAME
+dpkg -i -E ./$DEB_FILENAME
 
