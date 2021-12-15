@@ -9,22 +9,10 @@ indent() {
 echo "-----> Installing AWS CloudWatch Agent"
 
 BUILD_DIR=$1
-CACHE_DIR=$2
-AGENT_URL="https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb"
-DEB_FILENAME="amazon-cloudwatch-agent.deb"
-CACHE_FILE="$CACHE_DIR/$DEB_FILENAME"
+BUILDPACK_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
 
-if [ ! -f $CACHE_FILE ]; then
-    echo "Downloading agent" | indent
-    wget $AGENT_URL | indent
-    
-    echo "Storing deb in cache" | indent
-    if [ ! -d $CACHE_DIR ]; then
-        mkdir -p $CACHE_DIR
-    fi
-    mv ./$DEB_FILENAME $CACHE_DIR 
-fi
+mkdir -p "$BUILD_DIR/.profile.d"
+cp "$BUILDPACK_DIR/extra/aws-cloudwatch-agent.sh" "$BUILD_DIR/.profile.d/"
+chmod +x "$BUILD_DIR/.profile.d/aws-cloudwatch-agent.sh"
 
-cd $CACHE_DIR
-dpkg -i -E ./$DEB_FILENAME
 
